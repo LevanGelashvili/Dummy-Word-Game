@@ -1,5 +1,6 @@
 package com.adjarabet.user.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.adjarabet.user.databinding.ActivityUserBinding

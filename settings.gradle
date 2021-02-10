@@ -1,3 +1,4 @@
+include ':common'
 include ':bot'
 include ':user'
 rootProject.name = "DummyWordGame"

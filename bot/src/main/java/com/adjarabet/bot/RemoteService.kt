@@ -6,34 +6,17 @@ import android.content.Intent
 import android.os.*
 import android.util.Log
 import android.widget.Toast
+import com.adjarabet.common.messenger.RpcMessenger
+
+// TODO: Maybe add an interface between these two for callbacks
 
 class RemoteService : Service() {
 
-    private lateinit var messenger: Messenger
-
-    inner class IncomingHandler(
-            private val context: Context,
-            private val applicationContext: Context = context.applicationContext
-    ) : Handler() {
-
-        override fun handleMessage(msg: Message) {
-            Log.d("Here", "Handling message!")
-
-            val msgInt = msg.data.getInt("Here")
-            Toast.makeText(context, "Received $msgInt", Toast.LENGTH_LONG).show()
-
-            try {
-                msg.replyTo.send(msg)
-            } catch (e: RemoteException) {
-                e.printStackTrace()
-            }
-        }
-    }
+    private var botMessenger = BotMessenger()
 
     override fun onBind(intent: Intent?): IBinder? {
         Log.d("Here", "BIND SUCCESSFUL")
-        messenger = Messenger(IncomingHandler(this))
-        return messenger.binder
+        return botMessenger.binder
     }
 
     override fun onCreate() {

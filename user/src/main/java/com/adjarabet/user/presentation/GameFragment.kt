@@ -37,14 +37,8 @@ class GameFragment : Fragment() {
 
             button.setOnClickListener {
                 val word = binding.editText.text.toString()
-
-                if (viewModel.isValidWord(word)) {
-                    viewModel.sendWordToOpponent(word)
-                    wordsAdapter.addPlayerWord(word)
-
-                } else {
-                    //display alert
-                }
+                viewModel.sendWordToOpponent(word)
+                wordsAdapter.addPlayerWord(word)
             }
 
             recyclerView.apply {
@@ -57,11 +51,15 @@ class GameFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.gameSuccessfullyInitedLiveData.observe(viewLifecycleOwner, { gameResult ->
-            if (gameResult) {
-                Toast.makeText(requireContext(), "YAY", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "sadj", Toast.LENGTH_SHORT).show()
+
+        viewModel.gameInitializedLiveData.observe(viewLifecycleOwner, {
+            when (it) {
+                is Result.Success -> {
+                    binding.button.isEnabled = true
+                }
+                else -> {
+
+                }
             }
         })
 
@@ -82,7 +80,7 @@ class GameFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //stopBotService()
+        //TODO: stopBotService()
     }
 
     companion object {
