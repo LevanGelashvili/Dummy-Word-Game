@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin_large"
         app:layout_constraintBottom_toTopOf="@+id/items"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,26 +27,21 @@
         android:id="@+id/items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="@dimen/margin_small"
         android:gravity="center"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <View
-            android:layout_marginBottom="24dp"
-            android:background="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="200dp"
+            android:layout_width="@dimen/width_text_input"
             android:layout_height="wrap_content"
-            android:hint="Enter a word">
+            android:hint="@string/input_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text"
+                android:background="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -53,11 +49,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button"
-            android:layout_width="150dp"
-            android:enabled="false"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="submit" />
+            android:layout_width="@dimen/size_button"
+            android:layout_height="@dimen/size_button"
+            android:layout_gravity="center"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/shape_button"
+            android:drawableTop="@drawable/drawable_arrow"
+            android:enabled="false" />
 
     </LinearLayout>
 

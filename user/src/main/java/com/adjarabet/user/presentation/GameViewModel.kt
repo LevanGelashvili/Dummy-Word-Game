@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.adjarabet.user.data.bot.BotGameRepositoryImpl
+import com.adjarabet.user.data.mock.MockGameRepositoryImpl
 import com.adjarabet.user.domain.usecase.GetOpponentsWordUseCase
 import com.adjarabet.user.domain.usecase.InitOpponentUseCase
 import com.adjarabet.user.utils.Result
 
 class GameViewModel : ViewModel() {
 
-    private val gameRepository = BotGameRepositoryImpl()
+    private val gameRepository = MockGameRepositoryImpl()
 
     private val _gameInitializedLiveData = MutableLiveData<Result<Unit>>()
     val gameInitializedLiveData: LiveData<Result<Unit>> get() = _gameInitializedLiveData
@@ -24,7 +25,6 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    //TODO: add loading state
     fun sendWordToOpponent(word: String) {
         GetOpponentsWordUseCase(gameRepository).invoke(word) {
             _opponentWordLiveData.value = it

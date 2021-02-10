@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
-    android:gravity="center_vertical|end"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:gravity="center_vertical"
+    android:layoutDirection="rtl"
+    android:orientation="horizontal"
+    android:padding="@dimen/cell_padding">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text_view"
+    <TextView
+        android:id="@+id/text_view_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:textColor="@android:color/holo_red_dark" />
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:textSize="@dimen/cell_position_text_size" />
+
+    <TextView
+        android:id="@+id/text_view_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/cell_margin_horizontal"
+        android:background="@drawable/drawable_rounded_rectangle_bot"
+
+        android:fontFamily="sans-serif"
+        android:paddingStart="@dimen/cell_text_padding_start"
+        android:paddingTop="@dimen/cell_text_padding_vertical"
+        android:paddingEnd="@dimen/cell_text_padding_end"
+        android:paddingBottom="@dimen/cell_text_padding_vertical"
+        android:textColor="@color/white" />
 
 </LinearLayout>

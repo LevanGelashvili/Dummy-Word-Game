@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.adjarabet.user.databinding.CellLoadingBinding
 import com.adjarabet.user.databinding.CellOpponentBinding
 import com.adjarabet.user.databinding.CellPlayerBinding
 
@@ -16,7 +15,6 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
         return when (listItems[position]) {
             is WordListItem.PlayerListItem -> VIEW_TYPE_PLAYER
             is WordListItem.OpponentListItem -> VIEW_TYPE_OPPONENT
-            is WordListItem.LoadingItem -> VIEW_TYPE_LOADER
         }
     }
 
@@ -25,10 +23,7 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
             VIEW_TYPE_PLAYER -> CellPlayerBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
-            VIEW_TYPE_OPPONENT -> CellOpponentBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
-            )
-            else -> CellLoadingBinding.inflate(
+            else -> CellOpponentBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         }
@@ -38,13 +33,10 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (val listItem = listItems[position]) {
             is WordListItem.PlayerListItem -> {
-                holder.bindPlayerCell(listItem.word)
+                holder.bindPlayerCell(listItem.word, position + 1)
             }
             is WordListItem.OpponentListItem -> {
-                holder.bindOpponentCell(listItem.word)
-            }
-            WordListItem.LoadingItem -> {
-                holder.bindLoaderCell()
+                holder.bindOpponentCell(listItem.word, position + 1)
             }
         }
     }
@@ -58,14 +50,7 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
     }
 
     fun addOpponentWord(word: String) {
-        if (listItems.isNotEmpty() && listItems.last() is WordListItem.LoadingItem) {
-            listItems.removeLast()
-        }
         addNewListItem(WordListItem.OpponentListItem(word))
-    }
-
-    fun addLoader() {
-        addNewListItem(WordListItem.LoadingItem)
     }
 
     private fun addNewListItem(listItem: WordListItem) {
@@ -76,31 +61,28 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bindPlayerCell(word: String) {
+        fun bindPlayerCell(word: String, position: Int) {
             (binding as CellPlayerBinding).apply {
-                textView.text = word
+                textViewContent.text = word
+                textViewPosition.text = "$position."
             }
         }
 
-        fun bindOpponentCell(word: String) {
+        fun bindOpponentCell(word: String, position: Int) {
             (binding as CellOpponentBinding).apply {
-                textView.text = word
+                textViewContent.text = word
+                textViewPosition.text = ".$position"
             }
-        }
-
-        fun bindLoaderCell() {
         }
     }
 
     sealed class WordListItem {
         data class PlayerListItem(val word: String) : WordListItem()
         data class OpponentListItem(val word: String) : WordListItem()
-        object LoadingItem : WordListItem()
     }
 
     companion object {
         private const val VIEW_TYPE_PLAYER = 1
         private const val VIEW_TYPE_OPPONENT = 2
-        private const val VIEW_TYPE_LOADER = 3
     }
 }

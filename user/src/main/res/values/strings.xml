@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">user</string>
+    <string name="input_hint">Enter a word...</string>
 </resources>

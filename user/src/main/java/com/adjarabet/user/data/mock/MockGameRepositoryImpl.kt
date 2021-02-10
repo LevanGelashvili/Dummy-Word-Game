@@ -6,7 +6,7 @@ import com.adjarabet.user.utils.Result
 class MockGameRepositoryImpl : GameRepository {
 
     override fun initOpponent(onSuccessfullyInitialized: (Result<Unit>) -> Unit) {
-
+        onSuccessfullyInitialized(Result.Success(Unit))
     }
 
     override fun getOpponentsWord(
