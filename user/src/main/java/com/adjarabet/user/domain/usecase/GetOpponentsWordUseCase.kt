@@ -1,12 +1,11 @@
 package com.adjarabet.user.domain.usecase
 
-import com.adjarabet.user.domain.entities.Word
 import com.adjarabet.user.domain.repository.GameRepository
-import io.reactivex.Single
+import com.adjarabet.user.utils.Result
 
 class GetOpponentsWordUseCase(private val gameRepository: GameRepository) {
 
-    operator fun invoke(myWord: Word): Single<String> {
-        return gameRepository.getOpponentsWord(myWord)
+    operator fun invoke(myWord: String, onOpponentWordReceived: (Result<String>) -> Unit) {
+        gameRepository.getOpponentsWord(myWord, onOpponentWordReceived)
     }
 }

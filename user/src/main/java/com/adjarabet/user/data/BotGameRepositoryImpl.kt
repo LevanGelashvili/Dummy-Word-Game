@@ -7,19 +7,19 @@ import android.content.ServiceConnection
 import android.os.*
 import android.widget.Toast
 import com.adjarabet.user.app.App
-import com.adjarabet.user.domain.entities.Word
 import com.adjarabet.user.domain.repository.GameRepository
+import com.adjarabet.user.utils.Result
 import io.reactivex.Completable
 import io.reactivex.Single
 import kotlin.random.Random
 
 class BotGameRepositoryImpl : GameRepository {
 
-    override fun initOpponent(): Completable {
+    override fun initOpponent(onOpponentInitialized: (Result<Nothing>) -> Unit): Completable {
         return Completable.complete()
     }
 
-    override fun getOpponentsWord(myWord: Word): Single<String> {
+    override fun getOpponentsWord(myWord: String, onOpponentWordReceived: (Result<String>) -> Unit): Single<String> {
         return Single.just("")
     }
 

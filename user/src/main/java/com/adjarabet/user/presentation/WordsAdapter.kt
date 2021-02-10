@@ -7,7 +7,6 @@ import androidx.viewbinding.ViewBinding
 import com.adjarabet.user.databinding.CellLoadingBinding
 import com.adjarabet.user.databinding.CellOpponentBinding
 import com.adjarabet.user.databinding.CellPlayerBinding
-import com.adjarabet.user.domain.entities.Word
 
 class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
 
@@ -54,11 +53,11 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
         return listItems.size
     }
 
-    fun addPlayerWord(word: Word) {
+    fun addPlayerWord(word: String) {
         addNewListItem(WordListItem.PlayerListItem(word))
     }
 
-    fun addOpponentWord(word: Word) {
+    fun addOpponentWord(word: String) {
         if (listItems.isNotEmpty() && listItems.last() is WordListItem.LoadingItem) {
             listItems.removeLast()
         }
@@ -77,15 +76,15 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bindPlayerCell(word: Word) {
+        fun bindPlayerCell(word: String) {
             (binding as CellPlayerBinding).apply {
-                textView.text = word.word
+                textView.text = word
             }
         }
 
-        fun bindOpponentCell(word: Word) {
+        fun bindOpponentCell(word: String) {
             (binding as CellOpponentBinding).apply {
-                textView.text = word.word
+                textView.text = word
             }
         }
 
@@ -94,8 +93,8 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
     }
 
     sealed class WordListItem {
-        data class PlayerListItem(val word: Word) : WordListItem()
-        data class OpponentListItem(val word: Word) : WordListItem()
+        data class PlayerListItem(val word: String) : WordListItem()
+        data class OpponentListItem(val word: String) : WordListItem()
         object LoadingItem : WordListItem()
     }
 

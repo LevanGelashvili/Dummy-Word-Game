@@ -5,13 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
-import com.adjarabet.user.R
 import com.adjarabet.user.databinding.FragmentUserBinding
-import com.adjarabet.user.domain.entities.Word
 import com.adjarabet.user.utils.Result
 
 class GameFragment : Fragment() {
@@ -44,7 +40,7 @@ class GameFragment : Fragment() {
 
                 if (viewModel.isValidWord(word)) {
                     viewModel.sendWordToOpponent(word)
-                    wordsAdapter.addPlayerWord(Word(word))
+                    wordsAdapter.addPlayerWord(word)
 
                 } else {
                     //display alert
@@ -72,7 +68,7 @@ class GameFragment : Fragment() {
         viewModel.opponentWordLiveData.observe(viewLifecycleOwner, {
             when (it) {
                 is Result.Success -> {
-                    wordsAdapter.addOpponentWord(Word(it.data))
+                    wordsAdapter.addOpponentWord(it.data)
                 }
                 is Result.Error -> {
                     // handle error

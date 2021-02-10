@@ -1,14 +1,12 @@
 package com.adjarabet.user.domain.repository
 
-import com.adjarabet.user.domain.entities.Word
-import io.reactivex.Completable
-import io.reactivex.Single
+import com.adjarabet.user.utils.Result
 
 interface GameRepository {
 
-    fun initOpponent(): Completable
+    fun initOpponent(onOpponentInitialized: (Result<Unit>) -> Unit)
 
-    fun getOpponentsWord(myWord: Word): Single<String>
+    fun getOpponentsWord(myWord: String, onOpponentWordReceived: (Result<String>) -> Unit)
 
     //TODO: UNBIND
 }

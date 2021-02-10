@@ -1,11 +1,11 @@
 package com.adjarabet.user.domain.usecase
 
 import com.adjarabet.user.domain.repository.GameRepository
-import io.reactivex.Completable
+import com.adjarabet.user.utils.Result
 
 class InitOpponentUseCase(private val gameRepository: GameRepository) {
 
-    operator fun invoke(): Completable {
-        return gameRepository.initOpponent()
+    operator fun invoke(onOpponentInitialized: (Result<Unit>) -> Unit) {
+        gameRepository.initOpponent(onOpponentInitialized)
     }
 }
