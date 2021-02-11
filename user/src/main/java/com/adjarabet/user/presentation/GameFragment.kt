@@ -1,12 +1,15 @@
 package com.adjarabet.user.presentation
 
-import android.os.*
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.adjarabet.user.R
+import com.adjarabet.user.domain.usecase.WordUseResult
 import com.adjarabet.user.databinding.FragmentUserBinding
 import com.adjarabet.user.utils.Result
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class GameFragment : Fragment() {
 
@@ -14,7 +17,11 @@ class GameFragment : Fragment() {
 
     private val viewModel = GameViewModel()
     private val wordsAdapter by lazy {
-        WordsAdapter()
+        WordsAdapter().apply {
+            scrollOnItemAdded = {
+                binding.nestedScrollView.smoothScrollBy(0, binding.root.height)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -23,10 +30,8 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentUserBinding.inflate(inflater, container, false)
-
         initViews()
         initObservers()
-
         return binding.root
     }
 
@@ -34,44 +39,99 @@ class GameFragment : Fragment() {
         binding.apply {
             button.setOnClickListener {
                 val word = binding.editText.text.toString()
-                wordsAdapter.addPlayerWord(word)
-                viewModel.sendWordToOpponent(word)
+                editText.setText(EMPTY_STRING)
+                button.isEnabled = false
+                handlePlayerInput(word)
             }
             recyclerView.adapter = wordsAdapter
         }
     }
 
     private fun initObservers() {
-
         viewModel.gameInitializedLiveData.observe(viewLifecycleOwner, {
             when (it) {
                 is Result.Success -> {
                     binding.button.isEnabled = true
                 }
                 else -> {
-
+                    showDialog(getString(R.string.dialog_error_title), getString(R.string.dialog_error_connect))
                 }
             }
         })
-
         viewModel.opponentWordLiveData.observe(viewLifecycleOwner, {
             when (it) {
                 is Result.Success -> {
-                    wordsAdapter.addOpponentWord(it.data)
+                    handleOpponentsWord(it.data)
                 }
                 is Result.Error -> {
-                    // handle error
+                    showDialog(getString(R.string.dialog_error_title), getString(R.string.dialog_error_send))
                 }
             }
         })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //TODO: stopBotService()
+    private fun handlePlayerInput(input: String) {
+
+        val playerLostDialogTitle = getString(R.string.dialog_title_loss)
+
+        when (val result = viewModel.validatePlayerInput(input)) {
+            is WordUseResult.Ok -> {
+                wordsAdapter.addWordsForPlayer(input)
+                viewModel.sendWordToOpponent(result.correctWord)
+            }
+            is WordUseResult.Repeated -> {
+                showDialog(playerLostDialogTitle, getString(R.string.dialog_repeated_word, result.repeatedWord))
+            }
+            is WordUseResult.Invalid -> {
+                showDialog(playerLostDialogTitle, getString(R.string.dialog_invalid_word, result.invalidWord))
+            }
+            is WordUseResult.Conflicting -> {
+                showDialog(playerLostDialogTitle, getString(R.string.dialog_conflicting_word, result.playerWord, result.opponentsWord))
+            }
+            is WordUseResult.GaveUp -> {
+                showDialog(playerLostDialogTitle, getString(R.string.dialog_player_gave_up))
+            }
+        }
+    }
+
+    private fun handleOpponentsWord(word: String) {
+
+        val botLostDialogTitle = getString(R.string.dialog_title_win)
+
+        when (val result = viewModel.validateOpponentWord(word)) {
+            is WordUseResult.Ok -> {
+                val formattedWords = viewModel.formatWordsForAdapter()
+                wordsAdapter.addWordsForOpponent(formattedWords)
+                binding.button.isEnabled = true
+            }
+            is WordUseResult.Repeated -> {
+                showDialog(botLostDialogTitle, getString(R.string.dialog_repeated_word, word))
+            }
+            is WordUseResult.Invalid -> {
+                showDialog(botLostDialogTitle, getString(R.string.dialog_invalid_word, word))
+            }
+            is WordUseResult.GaveUp -> {
+                showDialog(botLostDialogTitle, getString(R.string.dialog_bot_gave_up))
+            }
+        }
+    }
+
+    private fun showDialog(title: String, message: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setNeutralButton(
+                getString(R.string.dialog_button_text)
+            ) { _, _ ->
+                viewModel.shutdownOpponent()
+                onDestroy()
+            }.show()
     }
 
     companion object {
+
+        const val EMPTY_STRING = ""
+
         fun newInstance(): GameFragment {
             return GameFragment()
         }

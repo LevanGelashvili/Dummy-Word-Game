@@ -10,6 +10,7 @@ import com.adjarabet.user.databinding.CellPlayerBinding
 class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
 
     private val listItems = mutableListOf<WordListItem>()
+    var scrollOnItemAdded: (() -> Unit)? = null
 
     override fun getItemViewType(position: Int): Int {
         return when (listItems[position]) {
@@ -45,17 +46,18 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
         return listItems.size
     }
 
-    fun addPlayerWord(word: String) {
+    fun addWordsForPlayer(word: String) {
         addNewListItem(WordListItem.PlayerListItem(word))
     }
 
-    fun addOpponentWord(word: String) {
+    fun addWordsForOpponent(word: String) {
         addNewListItem(WordListItem.OpponentListItem(word))
     }
 
     private fun addNewListItem(listItem: WordListItem) {
         listItems.add(listItem)
         notifyItemChanged(listItems.size - 1)
+        scrollOnItemAdded?.invoke()
     }
 
     inner class ViewHolder(private val binding: ViewBinding) :

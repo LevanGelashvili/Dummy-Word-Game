@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DummyWordGame">
 
-        <activity android:name=".BotActivity">
+        <activity android:name=".ui.BotActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -18,7 +18,7 @@
         </activity>
 
         <service
-            android:name="com.adjarabet.bot.RemoteService"
+            android:name="com.adjarabet.bot.BotService"
             android:exported="true"
             android:enabled="true"
             android:process=":remote"/>

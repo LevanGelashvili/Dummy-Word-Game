@@ -8,8 +8,11 @@ import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
-import com.adjarabet.common.messenger.RpcMessenger
+import com.adjarabet.common.Constants
+import com.adjarabet.common.RpcMessenger
 import com.adjarabet.user.app.App
+import com.adjarabet.user.data.bot.BotGameRepositoryImpl.Companion.BOT_PACKAGE_NAME
+import com.adjarabet.user.data.bot.BotGameRepositoryImpl.Companion.BOT_SERVICE_NAME
 import com.adjarabet.user.utils.Result
 
 class UserMessenger : RpcMessenger() {
@@ -52,24 +55,28 @@ class UserMessenger : RpcMessenger() {
             try {
                 serviceMessenger!!.send(msg)
             } catch (e: RemoteException) {
+                onOpponentWordReceived?.invoke(Result.Error(e))
                 e.printStackTrace()
             }
         }
     }
 
-    fun launchOpponentApp() {
-        val launchIntent = App.context.packageManager.getLaunchIntentForPackage(BOT_PACKAGE_NAME)
-        App.context.startActivity(launchIntent)
+    fun shutdownOpponent() {
+        if (isBound) {
+            val msg = Message.obtain().apply {
+                what = Constants.BOT_SHUT_DOWN
+            }
+            try {
+                serviceMessenger!!.send(msg)
+            } catch (e: RemoteException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun bindToService() {
         val intent = Intent()
         intent.component = ComponentName(BOT_PACKAGE_NAME, BOT_SERVICE_NAME)
         App.context.bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
-    }
-
-    companion object {
-        const val BOT_PACKAGE_NAME = "com.adjarabet.bot"
-        const val BOT_SERVICE_NAME = "com.adjarabet.bot.RemoteService"
     }
 }

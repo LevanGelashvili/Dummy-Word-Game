@@ -1,8 +1,7 @@
-package com.adjarabet.common.messenger
+package com.adjarabet.common
 
 import android.annotation.SuppressLint
 import android.os.*
-import android.util.Log
 
 abstract class RpcMessenger {
 
