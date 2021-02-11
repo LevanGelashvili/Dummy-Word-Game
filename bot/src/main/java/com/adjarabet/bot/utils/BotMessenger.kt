@@ -5,9 +5,9 @@ import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
 import com.adjarabet.common.Constants
-import com.adjarabet.common.RpcMessenger
+import com.adjarabet.common.WordHandlingMessenger
 
-class BotMessenger : RpcMessenger() {
+class BotMessenger : WordHandlingMessenger() {
 
     val binder: IBinder?
         get() = messenger.binder

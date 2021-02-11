@@ -4,18 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.adjarabet.user.R
-import com.adjarabet.user.domain.usecase.WordUseResult
 import com.adjarabet.user.databinding.FragmentUserBinding
+import com.adjarabet.user.domain.usecase.WordUseResult
 import com.adjarabet.user.utils.Result
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class GameFragment : Fragment() {
+class GameFragment : DaggerFragment() {
 
     private lateinit var binding: FragmentUserBinding
 
-    private val viewModel = GameViewModel()
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
+    }
+
     private val wordsAdapter by lazy {
         WordsAdapter().apply {
             scrollOnItemAdded = {
@@ -86,7 +93,11 @@ class GameFragment : Fragment() {
                 showDialog(playerLostDialogTitle, getString(R.string.dialog_invalid_word, result.invalidWord))
             }
             is WordUseResult.Conflicting -> {
-                showDialog(playerLostDialogTitle, getString(R.string.dialog_conflicting_word, result.playerWord, result.opponentsWord))
+                showDialog(playerLostDialogTitle, getString(
+                        R.string.dialog_conflicting_word,
+                        result.playerWord,
+                        result.opponentsWord
+                    ))
             }
             is WordUseResult.GaveUp -> {
                 showDialog(playerLostDialogTitle, getString(R.string.dialog_player_gave_up))

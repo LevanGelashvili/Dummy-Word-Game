@@ -1,4 +1,4 @@
-package com.adjarabet.user.data.bot
+package com.adjarabet.user.data
 
 import android.content.ComponentName
 import android.content.Context
@@ -9,13 +9,12 @@ import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
 import com.adjarabet.common.Constants
-import com.adjarabet.common.RpcMessenger
-import com.adjarabet.user.app.App
-import com.adjarabet.user.data.bot.BotGameRepositoryImpl.Companion.BOT_PACKAGE_NAME
-import com.adjarabet.user.data.bot.BotGameRepositoryImpl.Companion.BOT_SERVICE_NAME
+import com.adjarabet.common.WordHandlingMessenger
+import com.adjarabet.user.data.BotGameRepositoryImpl.Companion.BOT_PACKAGE_NAME
+import com.adjarabet.user.data.BotGameRepositoryImpl.Companion.BOT_SERVICE_NAME
 import com.adjarabet.user.utils.Result
 
-class UserMessenger : RpcMessenger() {
+class UserMessenger(private val context: Context) : WordHandlingMessenger() {
 
     private var isBound: Boolean = false
     private var serviceMessenger: Messenger? = null
@@ -53,7 +52,7 @@ class UserMessenger : RpcMessenger() {
             }
 
             try {
-                serviceMessenger!!.send(msg)
+                serviceMessenger?.send(msg)
             } catch (e: RemoteException) {
                 onOpponentWordReceived?.invoke(Result.Error(e))
                 e.printStackTrace()
@@ -67,7 +66,7 @@ class UserMessenger : RpcMessenger() {
                 what = Constants.BOT_SHUT_DOWN
             }
             try {
-                serviceMessenger!!.send(msg)
+                serviceMessenger?.send(msg)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
@@ -77,6 +76,6 @@ class UserMessenger : RpcMessenger() {
     fun bindToService() {
         val intent = Intent()
         intent.component = ComponentName(BOT_PACKAGE_NAME, BOT_SERVICE_NAME)
-        App.context.bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
+        context.bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
     }
 }

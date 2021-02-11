@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">user</string>
+    <string name="app_name">Dummy Word Game</string>
     <string name="input_hint">Enter a word…</string>
 
     <string name="dialog_title_win">You Win!</string>

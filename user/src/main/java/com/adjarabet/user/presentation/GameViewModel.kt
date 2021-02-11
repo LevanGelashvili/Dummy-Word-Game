@@ -3,14 +3,16 @@ package com.adjarabet.user.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.adjarabet.user.data.bot.BotGameRepositoryImpl
 import com.adjarabet.user.domain.usecase.*
 import com.adjarabet.user.utils.Result
+import javax.inject.Inject
 
-class GameViewModel : ViewModel() {
-
-    private val gameRepository = BotGameRepositoryImpl()
-    private val gameLogic = GameLogic()
+class GameViewModel @Inject constructor(
+    initOpponentUseCase: InitOpponentUseCase,
+    private val getOpponentsWordUseCase: GetOpponentsWordUseCase,
+    private val shutdownOpponentUseCase: ShutdownOpponentUseCase,
+    private val gameLogicUseCase: GameLogicUseCase
+) : ViewModel() {
 
     private val _gameInitializedLiveData = MutableLiveData<Result<Unit>>()
     val gameInitializedLiveData: LiveData<Result<Unit>> get() = _gameInitializedLiveData
@@ -19,30 +21,30 @@ class GameViewModel : ViewModel() {
     val opponentWordLiveData: LiveData<Result<String>> get() = _opponentWordLiveData
 
     init {
-        InitOpponentUseCase(gameRepository).invoke {
+        initOpponentUseCase {
             _gameInitializedLiveData.value = it
         }
     }
 
     fun sendWordToOpponent(word: String) {
-        GetOpponentsWordUseCase(gameRepository).invoke(word) {
+        getOpponentsWordUseCase(word) {
             _opponentWordLiveData.value = it
         }
     }
 
     fun shutdownOpponent() {
-        ShutdownOpponentUseCase(gameRepository).invoke()
+        shutdownOpponentUseCase()
     }
 
     fun validatePlayerInput(input: String): WordUseResult {
-        return gameLogic.validatePlayerInput(input)
+        return gameLogicUseCase.validatePlayerInput(input)
     }
 
     fun validateOpponentWord(word: String): WordUseResult {
-        return gameLogic.validateSingleWord(word)
+        return gameLogicUseCase.validateSingleWord(word)
     }
 
     fun formatWordsForAdapter(): String {
-        return gameLogic.wordSet.joinToString(separator = " ")
+        return gameLogicUseCase.wordSet.joinToString(separator = " ")
     }
 }

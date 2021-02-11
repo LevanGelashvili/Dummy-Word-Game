@@ -17,7 +17,6 @@ class BotService : Service(), MessengerListener {
     }
 
     override fun shutdownService() {
-        Log.d("Here", "SHUTTING DOWN")
         stopSelf()
     }
 

@@ -1,14 +1,16 @@
-package com.adjarabet.user.data.bot
+package com.adjarabet.user.data
 
+import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
-import com.adjarabet.user.app.App
 import com.adjarabet.user.domain.repository.GameRepository
 import com.adjarabet.user.utils.Result
+import javax.inject.Inject
 
-class BotGameRepositoryImpl : GameRepository {
+class BotGameRepositoryImpl @Inject constructor(
+    private val context: Context
+) : GameRepository {
 
-    private var userMessenger = UserMessenger()
+    private var userMessenger = UserMessenger(context)
 
     override fun getOpponentsWord(
         myWord: String,
@@ -34,12 +36,12 @@ class BotGameRepositoryImpl : GameRepository {
     private fun tryToConnectWithBot(
         onOpponentInitialized: (Result<Unit>) -> Unit
     ) {
-        val packageManager = App.context.packageManager
+        val packageManager = context.packageManager
         packageManager.getPackageInfo(BOT_PACKAGE_NAME, BOT_PACKAGE_FLAG)
 
         val launchIntent = packageManager.getLaunchIntentForPackage(BOT_PACKAGE_NAME)
         launchIntent?.let {
-            App.context.startActivity(it)
+            context.startActivity(it)
         }
 
         userMessenger.onSuccessfullyInitialized = onOpponentInitialized

@@ -1,11 +1,15 @@
 package com.adjarabet.common
 
 import android.annotation.SuppressLint
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.Message
+import android.os.Messenger
 
-abstract class RpcMessenger {
+abstract class WordHandlingMessenger {
 
     private var incomingHandler = IncomingHandler()
+    
     protected val messenger: Messenger by lazy {
         Messenger(incomingHandler)
     }

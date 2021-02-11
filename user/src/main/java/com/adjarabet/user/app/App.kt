@@ -1,16 +1,12 @@
 package com.adjarabet.user.app
 
-import android.app.Application
-import android.content.Context
+import com.adjarabet.user.di.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 
-class App : Application() {
+class App : DaggerApplication() {
 
-    override fun onCreate() {
-        super.onCreate()
-        context = applicationContext
-    }
-
-    companion object {
-        lateinit var context: Context
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerAppComponent.factory().create(this)
     }
 }

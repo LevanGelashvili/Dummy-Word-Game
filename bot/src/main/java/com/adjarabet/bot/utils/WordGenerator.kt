@@ -23,7 +23,7 @@ class WordGenerator {
     }
 
     private fun generateRandomString(): String {
-        val randomLengthRange = Random.nextInt(2, 4)
+        val randomLengthRange = Random.nextInt(WORD_MIN_SIZE, WORD_MAX_SIZE)
         val charSetRange = ('a'..'z')
 
         val randomString = (1..randomLengthRange)
@@ -40,5 +40,7 @@ class WordGenerator {
     companion object {
         const val LOSING_PROBABILITY = 0.03
         const val WORD_LIMIT = 100
+        const val WORD_MIN_SIZE = 2
+        const val WORD_MAX_SIZE = 5
     }
 }

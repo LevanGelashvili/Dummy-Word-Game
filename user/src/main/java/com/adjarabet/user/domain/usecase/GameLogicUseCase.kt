@@ -1,6 +1,5 @@
 package com.adjarabet.user.domain.usecase
 
-import android.util.Log
 import com.adjarabet.common.Constants
 
 sealed class WordUseResult {
@@ -11,7 +10,7 @@ sealed class WordUseResult {
     object GaveUp : WordUseResult()
 }
 
-class GameLogic {
+class GameLogicUseCase {
 
     val wordSet = mutableSetOf<String>()
 
@@ -41,7 +40,6 @@ class GameLogic {
         if (playerUsedASpace) {
             return WordUseResult.Invalid(input)
         }
-        Log.d("Here", "PlayerWords: ${playerWords}\nBotWords: $wordSet")
         wordSet.forEachIndexed { index, opponentsWord ->
             if (opponentsWord != playerWords[index]) {
                 return WordUseResult.Conflicting(playerWords[index], opponentsWord)

@@ -1,10 +1,10 @@
 package com.adjarabet.user.presentation
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.adjarabet.user.databinding.ActivityUserBinding
+import dagger.android.support.DaggerAppCompatActivity
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : DaggerAppCompatActivity() {
 
     private lateinit var binding: ActivityUserBinding
 
@@ -16,9 +16,7 @@ class GameActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(binding.fragmentContainerView.id, GameFragment.newInstance(
-
-            ))
+            .replace(binding.fragmentContainerView.id, GameFragment.newInstance())
             .commitNow()
     }
 }
