@@ -1,6 +1,5 @@
 package com.adjarabet.user.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.adjarabet.user.databinding.ActivityUserBinding
@@ -17,7 +16,9 @@ class GameActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(binding.fragmentContainerView.id, GameFragment.newInstance())
+            .replace(binding.fragmentContainerView.id, GameFragment.newInstance(
+
+            ))
             .commitNow()
     }
 }

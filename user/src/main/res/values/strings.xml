@@ -12,7 +12,7 @@
     <string name="dialog_invalid_word">%s is an invalid word</string>
     <string name="dialog_conflicting_word">%s is in conflict with %s</string>
 
-    <string name="dialog_error_title">error</string>
+    <string name="dialog_error_title">Error occurred</string>
     <string name="dialog_error_send">Could not send a message</string>
     <string name="dialog_error_connect">Could not connect with the bot</string>
 </resources>

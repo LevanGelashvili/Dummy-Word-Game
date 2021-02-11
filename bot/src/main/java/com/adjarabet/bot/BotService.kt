@@ -17,22 +17,12 @@ class BotService : Service(), MessengerListener {
     }
 
     override fun shutdownService() {
+        Log.d("Here", "SHUTTING DOWN")
         stopSelf()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        Log.d("Here", "BIND SUCCESSFUL")
         return botMessenger.binder
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        Log.d("Here", "Service started")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("Here", "Service Destroyed")
     }
 
     override fun onWordReceived(opponentsWord: String) {

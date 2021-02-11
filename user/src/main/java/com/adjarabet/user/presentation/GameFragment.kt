@@ -39,7 +39,7 @@ class GameFragment : Fragment() {
         binding.apply {
             button.setOnClickListener {
                 val word = binding.editText.text.toString()
-                editText.setText(EMPTY_STRING)
+                editText.setText("")
                 button.isEnabled = false
                 handlePlayerInput(word)
             }
@@ -98,7 +98,7 @@ class GameFragment : Fragment() {
 
         val botLostDialogTitle = getString(R.string.dialog_title_win)
 
-        when (val result = viewModel.validateOpponentWord(word)) {
+        when (viewModel.validateOpponentWord(word)) {
             is WordUseResult.Ok -> {
                 val formattedWords = viewModel.formatWordsForAdapter()
                 wordsAdapter.addWordsForOpponent(formattedWords)
@@ -113,6 +113,9 @@ class GameFragment : Fragment() {
             is WordUseResult.GaveUp -> {
                 showDialog(botLostDialogTitle, getString(R.string.dialog_bot_gave_up))
             }
+            is WordUseResult.Conflicting -> {
+                // opponent can not return a conflicting value
+            }
         }
     }
 
@@ -123,15 +126,16 @@ class GameFragment : Fragment() {
             .setNeutralButton(
                 getString(R.string.dialog_button_text)
             ) { _, _ ->
-                viewModel.shutdownOpponent()
-                onDestroy()
+                gameOver()
             }.show()
     }
 
+    private fun gameOver() {
+        viewModel.shutdownOpponent()
+        requireActivity().finish()
+    }
+
     companion object {
-
-        const val EMPTY_STRING = ""
-
         fun newInstance(): GameFragment {
             return GameFragment()
         }

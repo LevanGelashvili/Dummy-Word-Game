@@ -38,7 +38,9 @@ class BotGameRepositoryImpl : GameRepository {
         packageManager.getPackageInfo(BOT_PACKAGE_NAME, BOT_PACKAGE_FLAG)
 
         val launchIntent = packageManager.getLaunchIntentForPackage(BOT_PACKAGE_NAME)
-        App.context.startActivity(launchIntent)
+        launchIntent?.let {
+            App.context.startActivity(it)
+        }
 
         userMessenger.onSuccessfullyInitialized = onOpponentInitialized
         userMessenger.bindToService()

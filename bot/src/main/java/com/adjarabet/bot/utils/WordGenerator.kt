@@ -23,7 +23,7 @@ class WordGenerator {
     }
 
     private fun generateRandomString(): String {
-        val randomLengthRange = Random.nextInt(2, 6)
+        val randomLengthRange = Random.nextInt(2, 4)
         val charSetRange = ('a'..'z')
 
         val randomString = (1..randomLengthRange)
