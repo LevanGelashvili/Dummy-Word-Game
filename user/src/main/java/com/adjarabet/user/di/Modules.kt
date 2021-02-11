@@ -7,7 +7,7 @@ import com.adjarabet.user.app.App
 import com.adjarabet.user.data.BotGameRepositoryImpl
 import com.adjarabet.user.domain.repository.GameRepository
 import com.adjarabet.user.domain.usecase.GameLogicUseCase
-import com.adjarabet.user.presentation.GameActivity
+import com.adjarabet.user.app.GameActivity
 import com.adjarabet.user.presentation.GameFragment
 import com.adjarabet.user.presentation.GameViewModel
 import dagger.Binds

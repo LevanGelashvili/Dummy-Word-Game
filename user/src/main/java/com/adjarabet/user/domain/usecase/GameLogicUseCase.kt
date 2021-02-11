@@ -22,7 +22,7 @@ class GameLogicUseCase {
             wordSet.contains(word) -> {
                 WordUseResult.Repeated(word)
             }
-            word.contains(" ") -> {
+            word.isBlank() || word.contains(" ") -> {
                 WordUseResult.Invalid(word)
             }
             else -> {
