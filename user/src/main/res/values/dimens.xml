@@ -3,10 +3,10 @@
     <dimen name="size_button">45dp</dimen>
     <dimen name="size_rounded_rectangle_corner">20dp</dimen>
 
-    <dimen name="cell_padding">10dp</dimen>
+    <dimen name="cell_padding">8dp</dimen>
     <dimen name="cell_margin_horizontal">40dp</dimen>
     <dimen name="cell_text_padding_vertical">12dp</dimen>
-    <dimen name="cell_text_padding_start">20dp</dimen>
+    <dimen name="cell_text_padding_start">12dp</dimen>
     <dimen name="cell_text_padding_end">14dp</dimen>
     <dimen name="cell_position_text_size">18sp</dimen>
 

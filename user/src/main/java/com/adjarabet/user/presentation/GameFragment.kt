@@ -1,6 +1,8 @@
 package com.adjarabet.user.presentation
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,9 +27,7 @@ class GameFragment : DaggerFragment() {
 
     private val wordsAdapter by lazy {
         WordsAdapter().apply {
-            scrollOnItemAdded = {
-                binding.nestedScrollView.smoothScrollBy(0, binding.root.height)
-            }
+            onItemAdded = { scrollToBottom() }
         }
     }
 
@@ -125,6 +125,7 @@ class GameFragment : DaggerFragment() {
                 val formattedWords = viewModel.formatWordsForAdapter()
                 wordsAdapter.addWordsForOpponent(formattedWords)
                 binding.button.isEnabled = true
+                //binding.nestedScrollView.smoothScrollBy(0, binding.root.height)
             }
             is WordUseResult.Repeated -> {
                 showDialog(botLostDialogTitle, getString(R.string.dialog_repeated_word, word))
@@ -158,7 +159,18 @@ class GameFragment : DaggerFragment() {
         viewModel.clearOpponentState()
     }
 
+    private fun scrollToBottom() {
+        Handler(Looper.getMainLooper()).postDelayed(
+            {
+                binding.nestedScrollView.smoothScrollBy(0, binding.root.height)
+            }, SCROLL_TIMEOUT
+        )
+    }
+
     companion object {
+
+        const val SCROLL_TIMEOUT = 200L
+
         fun newInstance(): GameFragment {
             return GameFragment()
         }
