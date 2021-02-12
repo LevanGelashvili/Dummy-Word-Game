@@ -41,11 +41,11 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun validatePlayerInput(input: String): WordUseResult {
+    fun validatePlayerInput(input: String): WordValidation {
         return gameLogicUseCase.validatePlayerInput(input)
     }
 
-    fun validateOpponentWord(word: String): WordUseResult {
+    fun validateOpponentWord(word: String): WordValidation {
         return gameLogicUseCase.validateSingleWord(word)
     }
 

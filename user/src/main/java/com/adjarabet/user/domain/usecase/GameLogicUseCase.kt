@@ -2,49 +2,49 @@ package com.adjarabet.user.domain.usecase
 
 import com.adjarabet.common.Constants
 
-sealed class WordUseResult {
-    data class Ok(val correctWord: String) : WordUseResult()
-    data class Repeated(val repeatedWord: String) : WordUseResult()
-    data class Invalid(val invalidWord: String) : WordUseResult()
-    data class Conflicting(val playerWord: String, val opponentsWord: String) : WordUseResult()
-    object GaveUp : WordUseResult()
+sealed class WordValidation {
+    data class Ok(val correctWord: String) : WordValidation()
+    data class Repeated(val repeatedWord: String) : WordValidation()
+    data class Invalid(val invalidWord: String) : WordValidation()
+    data class Conflicting(val playerWord: String, val opponentsWord: String) : WordValidation()
+    object GaveUp : WordValidation()
 }
 
 class GameLogicUseCase {
 
     val wordSet = mutableSetOf<String>()
 
-    fun validateSingleWord(word: String): WordUseResult {
+    fun validateSingleWord(word: String): WordValidation {
         return when {
             word == Constants.BOT_GAVE_UP -> {
-                WordUseResult.GaveUp
+                WordValidation.GaveUp
             }
             wordSet.contains(word) -> {
-                WordUseResult.Repeated(word)
+                WordValidation.Repeated(word)
             }
             word.isBlank() || word.contains(" ") -> {
-                WordUseResult.Invalid(word)
+                WordValidation.Invalid(word)
             }
             else -> {
                 wordSet.add(word)
-                WordUseResult.Ok(word)
+                WordValidation.Ok(word)
             }
         }
     }
 
-    fun validatePlayerInput(input: String): WordUseResult {
+    fun validatePlayerInput(input: String): WordValidation {
 
         val playerWords = input.split(" ")
         val playerUsedASpace = playerWords.size > wordSet.size + 1
 
         if (playerUsedASpace) {
-            return WordUseResult.Invalid(input)
+            return WordValidation.Invalid(input)
         }
         wordSet.forEachIndexed { index, opponentsWord ->
             if (index >= playerWords.size) {
-                return WordUseResult.Conflicting(playerWords[index - 1], opponentsWord)
+                return WordValidation.Conflicting(playerWords[index - 1], opponentsWord)
             } else if (opponentsWord != playerWords[index]) {
-                return WordUseResult.Conflicting(playerWords[index], opponentsWord)
+                return WordValidation.Conflicting(playerWords[index], opponentsWord)
             }
         }
         return validateSingleWord(playerWords.last())

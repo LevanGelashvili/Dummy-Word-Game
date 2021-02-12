@@ -46,7 +46,6 @@ class UserMessenger(private val context: Context) : WordHandlingMessenger() {
         val opponentStateClearedSuccessfully = msg.what == Constants.CLEAR_STATE
 
         if (opponentStateClearedSuccessfully) {
-            //context.unbindService(serviceConnection) TODO: REMOVE
             onOpponentStateCleared?.invoke(Result.Success(Unit))
         } else {
             val word = getWordFromMessage(msg)

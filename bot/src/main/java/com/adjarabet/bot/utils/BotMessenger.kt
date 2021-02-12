@@ -20,8 +20,8 @@ class BotMessenger : WordHandlingMessenger() {
         val shouldClearState = msg.what == Constants.CLEAR_STATE
 
         if (shouldClearState) {
-            sendStateClearedMessage()
             messengerListener?.clearState()
+            sendStateClearedMessage()
         } else {
             val receivedWord = getWordFromMessage(msg)
             clientMessenger = msg.replyTo

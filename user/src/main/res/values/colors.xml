@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gradient_end_color">#3E0811</color>
+    <color name="gradient_end_color">#43030E</color>
     <color name="cell_player_color">#630C1B</color>
     <color name="cell_opponent_color">#cd0e2d</color>
 </resources>

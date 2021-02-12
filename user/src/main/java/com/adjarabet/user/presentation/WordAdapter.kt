@@ -7,7 +7,7 @@ import androidx.viewbinding.ViewBinding
 import com.adjarabet.user.databinding.CellOpponentBinding
 import com.adjarabet.user.databinding.CellPlayerBinding
 
-class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
+class WordAdapter : RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 
     private val listItems = mutableListOf<WordListItem>()
     var onItemAdded: (() -> Unit)? = null

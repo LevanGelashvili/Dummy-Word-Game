@@ -45,6 +45,6 @@ class WordGenerator {
         const val LOSING_PROBABILITY = 0.03
         const val WORD_LIMIT = 100
         const val WORD_MIN_SIZE = 2
-        const val WORD_MAX_SIZE = 5
+        const val WORD_MAX_SIZE = 6
     }
 }

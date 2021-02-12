@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.adjarabet.user.R
 import com.adjarabet.user.databinding.FragmentUserBinding
-import com.adjarabet.user.domain.usecase.WordUseResult
+import com.adjarabet.user.domain.usecase.WordValidation
 import com.adjarabet.user.utils.Result
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.DaggerFragment
@@ -26,7 +26,7 @@ class GameFragment : DaggerFragment() {
     }
 
     private val wordsAdapter by lazy {
-        WordsAdapter().apply {
+        WordAdapter().apply {
             onItemAdded = { scrollToBottom() }
         }
     }
@@ -46,7 +46,7 @@ class GameFragment : DaggerFragment() {
         binding.apply {
             button.setOnClickListener {
                 val word = binding.editText.text.toString()
-                //editText.setText("")
+                editText.setText("")
                 button.isEnabled = false
                 handlePlayerInput(word)
             }
@@ -55,6 +55,12 @@ class GameFragment : DaggerFragment() {
     }
 
     private fun initObservers() {
+        initGameInitializedObserver()
+        initOpponentWordObserver()
+        initOpponentStateClearedObserver()
+    }
+
+    private fun initGameInitializedObserver() {
         viewModel.gameInitializedLiveData.observe(viewLifecycleOwner, {
             when (it) {
                 is Result.Success -> {
@@ -65,6 +71,9 @@ class GameFragment : DaggerFragment() {
                 }
             }
         })
+    }
+
+    private fun initOpponentWordObserver() {
         viewModel.opponentWordLiveData.observe(viewLifecycleOwner, {
             when (it) {
                 is Result.Success -> {
@@ -75,6 +84,9 @@ class GameFragment : DaggerFragment() {
                 }
             }
         })
+    }
+
+    private fun initOpponentStateClearedObserver() {
         viewModel.clearOpponentStateLiveData.observe(viewLifecycleOwner, {
             when (it) {
                 is Result.Success -> {
@@ -93,24 +105,24 @@ class GameFragment : DaggerFragment() {
         val playerLostDialogTitle = getString(R.string.dialog_title_loss)
 
         when (val result = viewModel.validatePlayerInput(input)) {
-            is WordUseResult.Ok -> {
+            is WordValidation.Ok -> {
                 wordsAdapter.addWordsForPlayer(input)
                 viewModel.sendWordToOpponent(result.correctWord)
             }
-            is WordUseResult.Repeated -> {
+            is WordValidation.Repeated -> {
                 showDialog(playerLostDialogTitle, getString(R.string.dialog_repeated_word, result.repeatedWord))
             }
-            is WordUseResult.Invalid -> {
+            is WordValidation.Invalid -> {
                 showDialog(playerLostDialogTitle, getString(R.string.dialog_invalid_word, result.invalidWord))
             }
-            is WordUseResult.Conflicting -> {
+            is WordValidation.Conflicting -> {
                 showDialog(playerLostDialogTitle, getString(
                         R.string.dialog_conflicting_word,
                         result.playerWord,
                         result.opponentsWord
                     ))
             }
-            is WordUseResult.GaveUp -> {
+            is WordValidation.GaveUp -> {
                 showDialog(playerLostDialogTitle, getString(R.string.dialog_player_gave_up))
             }
         }
@@ -121,22 +133,21 @@ class GameFragment : DaggerFragment() {
         val botLostDialogTitle = getString(R.string.dialog_title_win)
 
         when (viewModel.validateOpponentWord(word)) {
-            is WordUseResult.Ok -> {
+            is WordValidation.Ok -> {
                 val formattedWords = viewModel.formatWordsForAdapter()
                 wordsAdapter.addWordsForOpponent(formattedWords)
                 binding.button.isEnabled = true
-                //binding.nestedScrollView.smoothScrollBy(0, binding.root.height)
             }
-            is WordUseResult.Repeated -> {
+            is WordValidation.Repeated -> {
                 showDialog(botLostDialogTitle, getString(R.string.dialog_repeated_word, word))
             }
-            is WordUseResult.Invalid -> {
+            is WordValidation.Invalid -> {
                 showDialog(botLostDialogTitle, getString(R.string.dialog_invalid_word, word))
             }
-            is WordUseResult.GaveUp -> {
+            is WordValidation.GaveUp -> {
                 showDialog(botLostDialogTitle, getString(R.string.dialog_bot_gave_up))
             }
-            is WordUseResult.Conflicting -> {
+            is WordValidation.Conflicting -> {
                 // opponent can not return a conflicting value
             }
         }
@@ -160,11 +171,9 @@ class GameFragment : DaggerFragment() {
     }
 
     private fun scrollToBottom() {
-        Handler(Looper.getMainLooper()).postDelayed(
-            {
-                binding.nestedScrollView.smoothScrollBy(0, binding.root.height)
-            }, SCROLL_TIMEOUT
-        )
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.nestedScrollView.smoothScrollBy(0, binding.root.height)
+        }, SCROLL_TIMEOUT)
     }
 
     companion object {
