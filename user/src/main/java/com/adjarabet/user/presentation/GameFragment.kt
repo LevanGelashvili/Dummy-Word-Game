@@ -78,6 +78,7 @@ class GameFragment : DaggerFragment() {
             when (it) {
                 is Result.Success -> {
                     handleOpponentsWord(it.data)
+                    binding.button.isEnabled = true
                 }
                 is Result.Error -> {
                     showDialog(getString(R.string.dialog_error_title), getString(R.string.dialog_error_send))
@@ -136,7 +137,6 @@ class GameFragment : DaggerFragment() {
             is WordValidation.Ok -> {
                 val formattedWords = viewModel.formatWordsForAdapter()
                 wordsAdapter.addWordsForOpponent(formattedWords)
-                binding.button.isEnabled = true
             }
             is WordValidation.Repeated -> {
                 showDialog(botLostDialogTitle, getString(R.string.dialog_repeated_word, word))
@@ -165,7 +165,6 @@ class GameFragment : DaggerFragment() {
     }
 
     private fun onGameRetried() {
-        binding.button.isEnabled = false
         viewModel.clearPlayerState()
         viewModel.clearOpponentState()
     }
