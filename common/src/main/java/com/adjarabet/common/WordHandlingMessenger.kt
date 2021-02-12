@@ -26,6 +26,12 @@ abstract class WordHandlingMessenger {
         }
     }
 
+    fun getClearStateMessage(): Message {
+        return Message.obtain().apply {
+            what = Constants.CLEAR_STATE
+        }
+    }
+
     fun getWordFromMessage(msg: Message): String {
         return msg.data.getString(MESSAGE_KEY)!!
     }

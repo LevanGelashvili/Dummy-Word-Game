@@ -16,11 +16,18 @@ class BotService : Service(), MessengerListener {
         messengerListener = this@BotService
     }
 
-    override fun shutdownService() {
-        stopSelf()
+    override fun clearState() {
+        Log.d("Here", "Clearing state")
+        wordGenerator.clearState()
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.d("Here", "Unbound")
+        return super.onUnbind(intent)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
+        Log.d("Here", "Binding")
         return botMessenger.binder
     }
 

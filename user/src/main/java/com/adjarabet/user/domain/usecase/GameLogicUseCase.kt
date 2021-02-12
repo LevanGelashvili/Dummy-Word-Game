@@ -41,10 +41,16 @@ class GameLogicUseCase {
             return WordUseResult.Invalid(input)
         }
         wordSet.forEachIndexed { index, opponentsWord ->
-            if (opponentsWord != playerWords[index]) {
+            if (index >= playerWords.size) {
+                return WordUseResult.Conflicting(playerWords[index - 1], opponentsWord)
+            } else if (opponentsWord != playerWords[index]) {
                 return WordUseResult.Conflicting(playerWords[index], opponentsWord)
             }
         }
         return validateSingleWord(playerWords.last())
+    }
+
+    fun clearState() {
+        wordSet.clear()
     }
 }

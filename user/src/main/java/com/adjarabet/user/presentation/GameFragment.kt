@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.adjarabet.user.R
 import com.adjarabet.user.databinding.FragmentUserBinding
@@ -47,7 +46,7 @@ class GameFragment : DaggerFragment() {
         binding.apply {
             button.setOnClickListener {
                 val word = binding.editText.text.toString()
-                editText.setText("")
+                //editText.setText("")
                 button.isEnabled = false
                 handlePlayerInput(word)
             }
@@ -73,6 +72,17 @@ class GameFragment : DaggerFragment() {
                 }
                 is Result.Error -> {
                     showDialog(getString(R.string.dialog_error_title), getString(R.string.dialog_error_send))
+                }
+            }
+        })
+        viewModel.clearOpponentStateLiveData.observe(viewLifecycleOwner, {
+            when (it) {
+                is Result.Success -> {
+                    wordsAdapter.clearWords()
+                    binding.button.isEnabled = true
+                }
+                is Result.Error -> {
+                    showDialog(getString(R.string.dialog_error_title), getString(R.string.dialog_bot_clear_error))
                 }
             }
         })
@@ -138,13 +148,14 @@ class GameFragment : DaggerFragment() {
             .setNeutralButton(
                 getString(R.string.dialog_button_text)
             ) { _, _ ->
-                gameOver()
+                onGameRetried()
             }.show()
     }
 
-    private fun gameOver() {
-        viewModel.shutdownOpponent()
-        requireActivity().finish()
+    private fun onGameRetried() {
+        binding.button.isEnabled = false
+        viewModel.clearPlayerState()
+        viewModel.clearOpponentState()
     }
 
     companion object {

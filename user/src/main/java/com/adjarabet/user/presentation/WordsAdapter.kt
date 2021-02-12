@@ -46,6 +46,11 @@ class WordsAdapter : RecyclerView.Adapter<WordsAdapter.ViewHolder>() {
         return listItems.size
     }
 
+    fun clearWords() {
+        listItems.clear()
+        notifyDataSetChanged()
+    }
+
     fun addWordsForPlayer(word: String) {
         addNewListItem(WordListItem.PlayerListItem(word))
     }

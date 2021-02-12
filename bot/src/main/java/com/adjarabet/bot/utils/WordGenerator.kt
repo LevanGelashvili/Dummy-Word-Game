@@ -22,6 +22,10 @@ class WordGenerator {
         }
     }
 
+    fun clearState() {
+        wordsUsed.clear()
+    }
+
     private fun generateRandomString(): String {
         val randomLengthRange = Random.nextInt(WORD_MIN_SIZE, WORD_MAX_SIZE)
         val charSetRange = ('a'..'z')

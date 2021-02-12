@@ -8,5 +8,5 @@ interface GameRepository {
 
     fun getOpponentsWord(myWord: String, onOpponentWordReceived: (Result<String>) -> Unit)
 
-    fun shutdownOpponent()
+    fun clearOpponentState(onOpponentStateCleared: (Result<Unit>) -> Unit)
 }

@@ -21,8 +21,9 @@ class UserMessenger(private val context: Context) : WordHandlingMessenger() {
 
     var onOpponentWordReceived: ((Result<String>) -> Unit)? = null
     var onSuccessfullyInitialized: ((Result<Unit>) -> Unit)? = null
+    var onOpponentStateCleared: ((Result<Unit>) -> Unit)? = null
 
-    private val myConnection: ServiceConnection = object : ServiceConnection {
+    private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(
             className: ComponentName,
             service: IBinder
@@ -41,8 +42,16 @@ class UserMessenger(private val context: Context) : WordHandlingMessenger() {
     }
 
     override fun handleIncomingMessage(msg: Message) {
-        val word = getWordFromMessage(msg)
-        onOpponentWordReceived?.invoke(Result.Success(word))
+
+        val opponentStateClearedSuccessfully = msg.what == Constants.CLEAR_STATE
+
+        if (opponentStateClearedSuccessfully) {
+            //context.unbindService(serviceConnection) TODO: REMOVE
+            onOpponentStateCleared?.invoke(Result.Success(Unit))
+        } else {
+            val word = getWordFromMessage(msg)
+            onOpponentWordReceived?.invoke(Result.Success(word))
+        }
     }
 
     override fun sendMessage(word: String) {
@@ -60,14 +69,12 @@ class UserMessenger(private val context: Context) : WordHandlingMessenger() {
         }
     }
 
-    fun shutdownOpponent() {
+    fun clearOpponentState() {
         if (isBound) {
-            val msg = Message.obtain().apply {
-                what = Constants.BOT_SHUT_DOWN
-            }
             try {
-                serviceMessenger?.send(msg)
+                serviceMessenger?.send(getClearStateMessage())
             } catch (e: RemoteException) {
+                onOpponentStateCleared?.invoke(Result.Error(e))
                 e.printStackTrace()
             }
         }
@@ -76,6 +83,6 @@ class UserMessenger(private val context: Context) : WordHandlingMessenger() {
     fun bindToService() {
         val intent = Intent()
         intent.component = ComponentName(BOT_PACKAGE_NAME, BOT_SERVICE_NAME)
-        context.bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
+        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 }

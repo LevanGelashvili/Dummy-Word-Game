@@ -4,13 +4,14 @@
 
     <string name="dialog_title_win">You Win!</string>
     <string name="dialog_title_loss">You Lose</string>
-    <string name="dialog_button_text">Thanks for playing</string>
+    <string name="dialog_button_text">Try again</string>
 
     <string name="dialog_player_gave_up">Why did you give yup?</string>
     <string name="dialog_bot_gave_up">Bot gave up!</string>
     <string name="dialog_repeated_word">Word &quot;%s&quot; has already been used</string>
     <string name="dialog_invalid_word">&quot;%s&quot; is an invalid word</string>
     <string name="dialog_conflicting_word">&quot;%s&quot; is in conflict with &quot;%s&quot;</string>
+    <string name="dialog_bot_clear_error">Could not clear bot state</string>
 
     <string name="dialog_error_title">Error occurred</string>
     <string name="dialog_error_send">Could not send a message</string>

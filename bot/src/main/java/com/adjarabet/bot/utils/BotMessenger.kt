@@ -17,10 +17,11 @@ class BotMessenger : WordHandlingMessenger() {
 
     override fun handleIncomingMessage(msg: Message) {
 
-        val shutdownBot = msg.what == Constants.BOT_SHUT_DOWN
+        val shouldClearState = msg.what == Constants.CLEAR_STATE
 
-        if (shutdownBot) {
-            messengerListener?.shutdownService()
+        if (shouldClearState) {
+            sendStateClearedMessage()
+            messengerListener?.clearState()
         } else {
             val receivedWord = getWordFromMessage(msg)
             clientMessenger = msg.replyTo
@@ -32,6 +33,14 @@ class BotMessenger : WordHandlingMessenger() {
         val newMessage = getMessageFromWord(word)
         try {
             clientMessenger?.send(newMessage)
+        } catch (e: RemoteException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun sendStateClearedMessage() {
+        try {
+            clientMessenger?.send(getClearStateMessage())
         } catch (e: RemoteException) {
             e.printStackTrace()
         }

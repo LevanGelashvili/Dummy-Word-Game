@@ -29,8 +29,9 @@ class BotGameRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun shutdownOpponent() {
-        userMessenger.shutdownOpponent()
+    override fun clearOpponentState(onOpponentStateCleared: (Result<Unit>) -> Unit) {
+        userMessenger.onOpponentStateCleared = onOpponentStateCleared
+        userMessenger.clearOpponentState()
     }
 
     private fun tryToConnectWithBot(
@@ -38,11 +39,6 @@ class BotGameRepositoryImpl @Inject constructor(
     ) {
         val packageManager = context.packageManager
         packageManager.getPackageInfo(BOT_PACKAGE_NAME, BOT_PACKAGE_FLAG)
-
-        val launchIntent = packageManager.getLaunchIntentForPackage(BOT_PACKAGE_NAME)
-        launchIntent?.let {
-            context.startActivity(it)
-        }
 
         userMessenger.onSuccessfullyInitialized = onOpponentInitialized
         userMessenger.bindToService()

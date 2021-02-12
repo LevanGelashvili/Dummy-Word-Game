@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(
     initOpponentUseCase: InitOpponentUseCase,
     private val getOpponentsWordUseCase: GetOpponentsWordUseCase,
-    private val shutdownOpponentUseCase: ShutdownOpponentUseCase,
+    private val clearOpponentStateUseCase: ClearOpponentStateUseCase,
     private val gameLogicUseCase: GameLogicUseCase
 ) : ViewModel() {
 
@@ -19,6 +19,9 @@ class GameViewModel @Inject constructor(
 
     private val _opponentWordLiveData = MutableLiveData<Result<String>>()
     val opponentWordLiveData: LiveData<Result<String>> get() = _opponentWordLiveData
+
+    private val _clearOpponentStateLiveData = MutableLiveData<Result<Unit>>()
+    val clearOpponentStateLiveData: LiveData<Result<Unit>> get() = _clearOpponentStateLiveData
 
     init {
         initOpponentUseCase {
@@ -32,8 +35,10 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun shutdownOpponent() {
-        shutdownOpponentUseCase()
+    fun clearOpponentState() {
+        clearOpponentStateUseCase {
+            _clearOpponentStateLiveData.value = it
+        }
     }
 
     fun validatePlayerInput(input: String): WordUseResult {
@@ -46,5 +51,9 @@ class GameViewModel @Inject constructor(
 
     fun formatWordsForAdapter(): String {
         return gameLogicUseCase.wordSet.joinToString(separator = " ")
+    }
+
+    fun clearPlayerState() {
+        gameLogicUseCase.clearState()
     }
 }
