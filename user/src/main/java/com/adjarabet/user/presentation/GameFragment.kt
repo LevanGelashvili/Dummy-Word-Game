@@ -92,7 +92,6 @@ class GameFragment : DaggerFragment() {
             when (it) {
                 is Result.Success -> {
                     wordsAdapter.clearWords()
-                    binding.button.isEnabled = true
                 }
                 is Result.Error -> {
                     showDialog(getString(R.string.dialog_error_title), getString(R.string.dialog_bot_clear_error))
@@ -167,6 +166,7 @@ class GameFragment : DaggerFragment() {
     private fun onGameRetried() {
         viewModel.clearPlayerState()
         viewModel.clearOpponentState()
+        binding.button.isEnabled = true
     }
 
     private fun scrollToBottom() {
