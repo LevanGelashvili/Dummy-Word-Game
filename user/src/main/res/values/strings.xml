@@ -9,7 +9,7 @@
     <string name="dialog_player_gave_up">Why did you give up?</string>
     <string name="dialog_bot_gave_up">Bot gave up!</string>
     <string name="dialog_repeated_word">Word \"%s\" has already been used</string>
-    <string name="dialog_invalid_word">\"%s\" is an invalid word</string>
+    <string name="dialog_invalid_word">\"%s\" is an invalid input</string>
     <string name="dialog_conflicting_word">\"%s\" is in conflict with \"%s\"</string>
     <string name="dialog_bot_clear_error">Could not clear bot state</string>
 
